@@ -4,20 +4,20 @@ public abstract class ConcretePiece implements Piece {
     /**
      * variable that represents how much steps piece passed
      */
-    int numOfSteps;
+  protected   int numOfSteps;
     /**
      * variable that represents ID of piece like A27
      */
-    String id;
+    protected   String id;
     /**
      * variable that save all the steps that piece passed
      */
-    ArrayList<Position> steps;
-    Player owner;
+    protected    ArrayList<Position> steps;
+    protected  Player owner;
     /**
      * variable that represents the dest that piece passed
      */
-    int distanceTraveled;
+    protected   int distanceTraveled;
 
     public ConcretePiece(Player owner, String id, Position initPos) {
         this.owner = owner;
