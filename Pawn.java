@@ -9,7 +9,7 @@ public class Pawn extends ConcretePiece {
     int kills;
 
     //constructor
-    public Pawn(Player owner, String id, Position xy) {
+    public Pawn(Player owner, String id, Position xy) {//use the abstract class
         super(owner, id, xy);
 
         if (owner.isPlayerOne())

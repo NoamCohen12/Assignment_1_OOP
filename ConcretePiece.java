@@ -1,10 +1,22 @@
 import java.util.ArrayList;
 
 public abstract class ConcretePiece implements Piece {
+    /**
+     * variable that represents how much steps piece passed
+     */
     int numOfSteps;
+    /**
+     * variable that represents ID of piece like A27
+     */
     String id;
+    /**
+     * variable that save all the steps that piece passed
+     */
     ArrayList<Position> steps;
     Player owner;
+    /**
+     * variable that represents the dest that piece passed
+     */
     int distanceTraveled;
 
     public ConcretePiece(Player owner, String id, Position initPos) {
@@ -23,7 +35,7 @@ public abstract class ConcretePiece implements Piece {
         return owner;
     }
 
-    public void addSteps(Position xy) {
+    public void addSteps(Position xy) {//updates the variable "steps"
         this.steps.add(xy);
     }
 
@@ -38,7 +50,6 @@ public int getDistanceTraveled(){
     }
 
     String[] getStepsArr() {
-        //return this.steps.ArraystoString();
         String[] stepsString = new String[steps.size()];
         for (int i = 0; i < steps.size(); i++) {
             stepsString[i] = steps.get(i).toString();
