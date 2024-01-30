@@ -5,7 +5,7 @@ class PieceKillsCompare implements Comparator<Pawn> {
     public PieceKillsCompare(Player winner) {
         this.winner = winner;
     }
-    // Sort in descending order by num off kills
+    // Sort in descending order by number of kills
     public int compare(Pawn p1, Pawn p2) {
         if (p1.getKills() != p2.getKills()) {
             return p2.getKills() - p1.getKills();

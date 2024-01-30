@@ -55,9 +55,10 @@ public class GameLogic implements PlayableLogic {
         startOfGame();
         initBoardOfPos(board);
     }
-    //Check if it's legal step - piece moves on straight lines (up, down, left, right)
-    // piece move only to free location
-    // piece can't pass over another piece
+    /** Check if it's legal step - piece moves on straight lines (up, down, left, right)
+     piece move only to free location
+     piece can't pass over another piece
+     */
     public boolean isLegalStep(Position a, Position b) {
         if (a.equals(b))
             return false;
@@ -65,14 +66,14 @@ public class GameLogic implements PlayableLogic {
         if (!a.isInside() || !b.isInside())
             return false;
 
-        // check if the moves a piece, and not null
+        // check if the move is a piece, and not null
         if (getPieceAtPosition(a) == null)
             return false;
 
-        // is the b cell is not empty, return false
+        // if the b cell is not empty, return false
         if (getPieceAtPosition(b) != null)
             return false;
-
+        // if we move with "pawn" we can't pass to the corner
         if (getPieceAtPosition(a) instanceof Pawn &&
                 (b.getX() == 10 && b.getY() == 0 ||
                         b.getX() == 0 && b.getY() == 10
@@ -94,7 +95,6 @@ public class GameLogic implements PlayableLogic {
             if (board[b.getY()][i] != null)
                 return false;
         }
-
 
         for (int i = a.getY() + 1; i < b.getY(); i++) {
             if (board[i][b.getX()] != null)
@@ -129,14 +129,14 @@ public class GameLogic implements PlayableLogic {
                     ((Pawn) current).addKill();//add kill to current pawn
                     board[b.getY()][b.getX() + 1] = null;
                 }
-                //if neighbour right x+1 and x+2 are not null
+            //if neighbour right x+1 and x+2 are not null
             } else if (b.getX() + 2 < 11 && board[b.getY()][b.getX() + 2] != null &&
                     (board[b.getY()][b.getX() + 2].getOwner() == current.getOwner()) &&
                     (board[b.getY()][b.getX() + 2] instanceof Pawn)) {
                 ((Pawn) current).addKill();//add kill to current pawn
                 board[b.getY()][b.getX() + 1] = null;
 
-                // eating with the green square when moving right
+            // eating with the green square when moving right
             } else if ((b.getX() + 2 == 10 && b.getY() == 10) || ((b.getX() + 2 == 10) && (b.getY() == 0))) {
                 ((Pawn) current).addKill();//add kill to current pawn
                 board[b.getY()][b.getX() + 1] = null;
@@ -218,12 +218,12 @@ public class GameLogic implements PlayableLogic {
 
     @Override
     public boolean move(Position a, Position b) {//TODO add bad location in corner
-        if (!isLegalStep(a, b)) {//input test
+        if (!isLegalStep(a, b)) {//check if the move is illegal
             return false;
         }
         ConcretePlayer currentPlayer = isSecondPlayerTurn() ? player2 : player1;
 
-        // if the tries to move piece not in his color
+        // if he tries to move piece not in his color
         if (board[a.getY()][a.getX()].getOwner() != currentPlayer)
             return false;
 
@@ -233,13 +233,8 @@ public class GameLogic implements PlayableLogic {
         ConcretePiece conPe = board[a.getY()][a.getX()];
         conPe.addSteps(b);
 
-       // Position PosFrom = boardOfPosition[a.getY()][a.getX()];
         Position PosTo = boardOfPosition[b.getY()][b.getX()];
-
-        //PosFrom.addWhoWasIn(conPe.getID());
         PosTo.addWhoWasIn(conPe.getID());
-
-
         board[b.getY()][b.getX()] = board[a.getY()][a.getX()];
         board[a.getY()][a.getX()] = null;
         isGameFinishHelp();
@@ -252,7 +247,7 @@ public class GameLogic implements PlayableLogic {
         this.isSecondPlayerTurn = !this.isSecondPlayerTurn;
         return true;
     }
-
+    //getters{
     @Override
     public Piece getPieceAtPosition(Position position) {
         if (!position.isInside()) return null;
@@ -274,6 +269,15 @@ public class GameLogic implements PlayableLogic {
        return gameFinish;
     }
 
+    @Override
+    public int getBoardSize() {//11X11
+        return 11;
+    }
+
+
+    /**This function check if we have a winner team
+     * in addition the function initialized parameters such "gameFinish" that we return at the end of game
+    */
      public void isGameFinishHelp() {
          //if the king found in these positions player1 win!
          Position rightUP = new Position(10, 0);
@@ -288,13 +292,11 @@ public class GameLogic implements PlayableLogic {
              gameFinish = true;//the game finish
              printStatistics();//Print the all statistics
          }
-// check if the king is in the extreme ranks
+         // check if the king is in the extreme ranks
          Piece upEnemy = getPieceAtPosition(new Position(posKing.getX(), posKing.getY() - 1));
          Piece downEnemy = getPieceAtPosition(new Position(posKing.getX(), posKing.getY() + 1));
          Piece leftEnemy = getPieceAtPosition(new Position(posKing.getX() - 1, posKing.getY()));
          Piece rightEnemy = getPieceAtPosition(new Position(posKing.getX() + 1, posKing.getY()));
-
-
 
          // check if the king is in the down column
          if (posKing.getY() == 10 &&
@@ -403,11 +405,9 @@ public class GameLogic implements PlayableLogic {
 
     }
 
-    @Override
-    public int getBoardSize() {//11X11
-        return 11;
-    }
-
+    /**
+     * Initialized the pieces on the game board
+    */
     public void startOfGame() {
         //king position
         board[5][5] = new King(player1, "K7", new Position(5, 5));
@@ -506,6 +506,10 @@ public class GameLogic implements PlayableLogic {
 
     }
 
+    /**
+     * The above 5 functions:"printKillData" "printLengthData" "printDestData" "printPositionData" "printStatistics"
+     * use to help us print the date in the required manner
+     */
     public void printKillData(ConcretePiece[] pieces) {//prints the statistics associated with the kill
         ArrayList<Pawn> list = new ArrayList<>();
         for (int i = 1; i < pieces.length; i++) {//without the king in picese[0]
@@ -590,29 +594,13 @@ public class GameLogic implements PlayableLogic {
 
     }
 
-    public void initBoardOfPos(ConcretePiece[][] board) {//initialization matrix of position
-        for (int i = 0; i < 11; i++) {
-            for (int j = 0; j < 11; j++) {
-                boardOfPosition[j][i] = new Position(i, j);
-            }
-        }
-        for (int i = 0; i < 11; i++) {//add to positions in beaning the pieceID of beginning that stand on them
-            for (int j = 0; j < 11; j++) {
-                if (board[j][i] != null) {//there is any piece
-                    Position temp = boardOfPosition[j][i];
-                    temp.addWhoWasIn(board[j][i].getID());
-                }
-            }
-        }
-    }
-
     public void printPositionData(Position[][] pos) {//prints the statistics associated with the num steps on positions
         ArrayList<Position> posComp = new ArrayList<>();
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
-               // if (pos[j][i] != null) {
-                    posComp.add(pos[j][i]);
-               // }
+                 if (pos[j][i] != null) {
+                posComp.add(pos[j][i]);
+                 }
             }
         }
         posComp.sort(new PiecePositionCompare());
@@ -635,6 +623,30 @@ public class GameLogic implements PlayableLogic {
         System.out.println("***************************************************************************");
 
     }
+
+
+
+
+
+    /**
+     * This function initialized a board of position use to manage the position of each piece
+     */
+    public void initBoardOfPos(ConcretePiece[][] board) {//initialization matrix of position
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 11; j++) {
+                boardOfPosition[j][i] = new Position(i, j);
+            }
+        }
+        for (int i = 0; i < 11; i++) {//add to positions in beaning the pieceID of beginning that stand on them
+            for (int j = 0; j < 11; j++) {
+                if (board[j][i] != null) {//there is any piece
+                    Position temp = boardOfPosition[j][i];
+                    temp.addWhoWasIn(board[j][i].getID());
+                }
+            }
+        }
+    }
+
 
 }
 
