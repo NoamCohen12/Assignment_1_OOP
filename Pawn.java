@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Pawn extends ConcretePiece {
@@ -28,8 +27,6 @@ public class Pawn extends ConcretePiece {
     public int getKills() {
         return this.kills;
     }
-
-    public static Comparator<Pawn> killsCompare = Comparator.comparingInt(Pawn::getKills);
 
     public void addKill() {
         this.kills += 1;

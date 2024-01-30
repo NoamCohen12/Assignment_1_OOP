@@ -7,11 +7,11 @@ import java.util.Comparator;
  * if the number is equal, sort by the winning team first.
  * Show only pieces that have taken at least one step
  */
-class PieceSquarsCompare implements Comparator<ConcretePiece> {
+class PieceSquaresCompare implements Comparator<ConcretePiece> {
 
-    private Player winner;
+    private final Player winner;
 
-    public PieceSquarsCompare(Player winner) {
+    public PieceSquaresCompare(Player winner) {
         this.winner = winner;
     }
 

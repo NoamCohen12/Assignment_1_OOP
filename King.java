@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class King extends ConcretePiece {
     //Data

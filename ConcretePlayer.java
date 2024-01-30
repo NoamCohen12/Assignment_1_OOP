@@ -1,6 +1,6 @@
 public class ConcretePlayer implements Player {
     private int wins;
-    private  boolean isPlayerOne;
+    private final boolean isPlayerOne;
 
     public ConcretePlayer(boolean isPlayerOne) {
         this.wins = 0;

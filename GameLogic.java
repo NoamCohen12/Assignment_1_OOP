@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 
 
 public class GameLogic implements PlayableLogic {
@@ -27,7 +26,7 @@ public class GameLogic implements PlayableLogic {
     /**
      * variable that indicates whether the game is over
      */
-    private boolean gameFinish = false;
+    private boolean gameFinish;
     /**
      * variable that indicates Who won this turn?
      */
@@ -40,7 +39,7 @@ public class GameLogic implements PlayableLogic {
      * class variable that help us to know whose turn it is?,
      * At first It is initialized true because is the turn of player 2
      */
-    private boolean isSecondPlayerTurn = true;
+    private boolean isSecondPlayerTurn;
     /**
      * all the pieces on the board in array that help us to print a statistic when the game done
      */
@@ -52,14 +51,19 @@ public class GameLogic implements PlayableLogic {
         this.board = new ConcretePiece[11][11];
         this.posKing = new Position(5, 5);
         this.boardOfPosition = new Position[11][11];
+        gameFinish = false;
+        isSecondPlayerTurn = true;
+
         startOfGame();
         initBoardOfPos(board);
     }
-    /** Check if it's legal step - piece moves on straight lines (up, down, left, right)
-     piece move only to free location
-     piece can't pass over another piece
+
+    /**
+     * Check if it's legal step - piece moves on straight lines (up, down, left, right)
+     * piece move only to free location
+     * piece can't pass over another piece
      */
-    public boolean isLegalStep(Position a, Position b) {
+    private boolean isLegalStep(Position a, Position b) {
         if (a.equals(b))
             return false;
 
@@ -109,15 +113,12 @@ public class GameLogic implements PlayableLogic {
 
     /**
      * "eatOptions" is function that realizes eats according to the rules of the game
-     * @param b
+     *
+     * @param b the position
      */
-    public void eatOptions(Position b) {
+    private void eatOptions(Position b) {
 
         ConcretePiece current = board[b.getY()][b.getX()];
-        Piece up = getPieceAtPosition(new Position(b.getX(), b.getY() - 1));
-        Piece down = getPieceAtPosition(new Position(b.getX(), b.getY() + 1));
-        Piece right = getPieceAtPosition(new Position(b.getX() + 1, b.getY()));
-        Piece left = getPieceAtPosition(new Position(b.getX() - 1, b.getY()));
 
         //eat to right side
         if (b.getX() + 1 < 11 && board[b.getY()][b.getX() + 1] != null &&
@@ -129,14 +130,14 @@ public class GameLogic implements PlayableLogic {
                     ((Pawn) current).addKill();//add kill to current pawn
                     board[b.getY()][b.getX() + 1] = null;
                 }
-            //if neighbour right x+1 and x+2 are not null
+                //if neighbour right x+1 and x+2 are not null
             } else if (b.getX() + 2 < 11 && board[b.getY()][b.getX() + 2] != null &&
                     (board[b.getY()][b.getX() + 2].getOwner() == current.getOwner()) &&
                     (board[b.getY()][b.getX() + 2] instanceof Pawn)) {
                 ((Pawn) current).addKill();//add kill to current pawn
                 board[b.getY()][b.getX() + 1] = null;
 
-            // eating with the green square when moving right
+                // eating with the green square when moving right
             } else if ((b.getX() + 2 == 10 && b.getY() == 10) || ((b.getX() + 2 == 10) && (b.getY() == 0))) {
                 ((Pawn) current).addKill();//add kill to current pawn
                 board[b.getY()][b.getX() + 1] = null;
@@ -247,6 +248,7 @@ public class GameLogic implements PlayableLogic {
         this.isSecondPlayerTurn = !this.isSecondPlayerTurn;
         return true;
     }
+
     //getters{
     @Override
     public Piece getPieceAtPosition(Position position) {
@@ -265,8 +267,8 @@ public class GameLogic implements PlayableLogic {
     }
 
     @Override
-    public boolean isGameFinished( ) {
-       return gameFinish;
+    public boolean isGameFinished() {
+        return gameFinish;
     }
 
     @Override
@@ -275,111 +277,112 @@ public class GameLogic implements PlayableLogic {
     }
 
 
-    /**This function check if we have a winner team
+    /**
+     * This function check if we have a winner team
      * in addition the function initialized parameters such "gameFinish" that we return at the end of game
-    */
-     public void isGameFinishHelp() {
-         //if the king found in these positions player1 win!
-         Position rightUP = new Position(10, 0);
-         Position leftUP = new Position(0, 0);
-         Position rightDown = new Position(10, 10);
-         Position leftDown = new Position(0, 10);
-         if (posKing.equals(rightUP) || posKing.equals(leftUP) || posKing.equals(rightDown)
-                 || posKing.equals(leftDown)) {
-             winner = player1;//update the winner
-             playerOneWin = true;//player1 win
-             player1.addWins();//add win to player1
-             gameFinish = true;//the game finish
-             printStatistics();//Print the all statistics
-         }
-         // check if the king is in the extreme ranks
-         Piece upEnemy = getPieceAtPosition(new Position(posKing.getX(), posKing.getY() - 1));
-         Piece downEnemy = getPieceAtPosition(new Position(posKing.getX(), posKing.getY() + 1));
-         Piece leftEnemy = getPieceAtPosition(new Position(posKing.getX() - 1, posKing.getY()));
-         Piece rightEnemy = getPieceAtPosition(new Position(posKing.getX() + 1, posKing.getY()));
+     */
+    private void isGameFinishHelp() {
+        //if the king found in these positions player1 win!
+        Position rightUP = new Position(10, 0);
+        Position leftUP = new Position(0, 0);
+        Position rightDown = new Position(10, 10);
+        Position leftDown = new Position(0, 10);
+        if (posKing.equals(rightUP) || posKing.equals(leftUP) || posKing.equals(rightDown)
+                || posKing.equals(leftDown)) {
+            winner = player1;//update the winner
+            playerOneWin = true;//player1 win
+            player1.addWins();//add win to player1
+            gameFinish = true;//the game finish
+            printStatistics();//Print the all statistics
+        }
+        // check if the king is in the extreme ranks
+        Piece upEnemy = getPieceAtPosition(new Position(posKing.getX(), posKing.getY() - 1));
+        Piece downEnemy = getPieceAtPosition(new Position(posKing.getX(), posKing.getY() + 1));
+        Piece leftEnemy = getPieceAtPosition(new Position(posKing.getX() - 1, posKing.getY()));
+        Piece rightEnemy = getPieceAtPosition(new Position(posKing.getX() + 1, posKing.getY()));
 
-         // check if the king is in the down column
-         if (posKing.getY() == 10 &&
-                 upEnemy != null && upEnemy.getOwner() == player2 &&
-                 rightEnemy != null && rightEnemy.getOwner() == player2 &&
-                 leftEnemy != null && leftEnemy.getOwner() == player2) {
-             winner = player2;//update the winner
-             playerOneWin = false;//player2 win
-             player2.addWins();//add win to player2
-             gameFinish = true;//the game finish
-             printStatistics();//Print the all statistics
-         }
-         // check if the king is in the right row
-         if (posKing.getX() == 10 &&
-                 leftEnemy != null && leftEnemy.getOwner() == player2 &&
-                 downEnemy != null && downEnemy.getOwner() == player2 &&
-                 upEnemy != null && upEnemy.getOwner() == player2) {
-             winner = player2;//update the winner
-             playerOneWin = false;//player2 win
-             player2.addWins();//add win to player2
-             gameFinish = true;//the game finish
-             printStatistics();//Print the all statistics
-         }
-         // check if the king is in the up column
-         if (posKing.getY() == 0 &&
-                 leftEnemy != null && leftEnemy.getOwner() == player2 &&
-                 downEnemy != null && downEnemy.getOwner() == player2 &&
-                 rightEnemy != null && rightEnemy.getOwner() == player2) {
-             winner = player2;//update the winner
-             playerOneWin = false;//player2 win
-             player2.addWins();//add win to player2
-             gameFinish = true;//the game finish
-             printStatistics();//Print the all statistics
-         }
-         // check if the king is in the left row
-         if (posKing.getX() == 0 &&
-                 rightEnemy != null && rightEnemy.getOwner() == player2 &&
-                 downEnemy != null && downEnemy.getOwner() == player2 &&
-                 upEnemy != null && upEnemy.getOwner() == player2) {
-             winner = player2;//update the winner
-             playerOneWin = false;//player2 win
-             player2.addWins();//add win to player2
-             gameFinish = true;//the game finish
-             printStatistics();//Print the all statistics
-         }
-         //in the case the king in center and the enemy's around
-         Position upEnemyE = new Position(posKing.getX(), posKing.getY() - 1);
-         Position downEnemyE = new Position(posKing.getX(), posKing.getY() + 1);
-         Position leftEnemyE = new Position(posKing.getX() - 1, posKing.getY());
-         Position rightEnemyE = new Position(posKing.getX() + 1, posKing.getY());
+        // check if the king is in the down column
+        if (posKing.getY() == 10 &&
+                upEnemy != null && upEnemy.getOwner() == player2 &&
+                rightEnemy != null && rightEnemy.getOwner() == player2 &&
+                leftEnemy != null && leftEnemy.getOwner() == player2) {
+            winner = player2;//update the winner
+            playerOneWin = false;//player2 win
+            player2.addWins();//add win to player2
+            gameFinish = true;//the game finish
+            printStatistics();//Print the all statistics
+        }
+        // check if the king is in the right row
+        if (posKing.getX() == 10 &&
+                leftEnemy != null && leftEnemy.getOwner() == player2 &&
+                downEnemy != null && downEnemy.getOwner() == player2 &&
+                upEnemy != null && upEnemy.getOwner() == player2) {
+            winner = player2;//update the winner
+            playerOneWin = false;//player2 win
+            player2.addWins();//add win to player2
+            gameFinish = true;//the game finish
+            printStatistics();//Print the all statistics
+        }
+        // check if the king is in the up column
+        if (posKing.getY() == 0 &&
+                leftEnemy != null && leftEnemy.getOwner() == player2 &&
+                downEnemy != null && downEnemy.getOwner() == player2 &&
+                rightEnemy != null && rightEnemy.getOwner() == player2) {
+            winner = player2;//update the winner
+            playerOneWin = false;//player2 win
+            player2.addWins();//add win to player2
+            gameFinish = true;//the game finish
+            printStatistics();//Print the all statistics
+        }
+        // check if the king is in the left row
+        if (posKing.getX() == 0 &&
+                rightEnemy != null && rightEnemy.getOwner() == player2 &&
+                downEnemy != null && downEnemy.getOwner() == player2 &&
+                upEnemy != null && upEnemy.getOwner() == player2) {
+            winner = player2;//update the winner
+            playerOneWin = false;//player2 win
+            player2.addWins();//add win to player2
+            gameFinish = true;//the game finish
+            printStatistics();//Print the all statistics
+        }
+        //in the case the king in center and the enemy's around
+        Position upEnemyE = new Position(posKing.getX(), posKing.getY() - 1);
+        Position downEnemyE = new Position(posKing.getX(), posKing.getY() + 1);
+        Position leftEnemyE = new Position(posKing.getX() - 1, posKing.getY());
+        Position rightEnemyE = new Position(posKing.getX() + 1, posKing.getY());
 
-         if ((getPieceAtPosition(upEnemyE) != null && !getPieceAtPosition(upEnemyE).getOwner().isPlayerOne()) &&
-                 (getPieceAtPosition(downEnemyE) != null && !getPieceAtPosition(downEnemyE).getOwner().isPlayerOne()) &&
-                 (getPieceAtPosition(leftEnemyE) != null && !getPieceAtPosition(leftEnemyE).getOwner().isPlayerOne()) &&
-                 (getPieceAtPosition(rightEnemyE) != null && !getPieceAtPosition(rightEnemyE).getOwner().isPlayerOne())) {
-             winner = player2;//update the winner
-             playerOneWin = false;//player2 win
-             player2.addWins();//add win to player2
-             gameFinish = true;//the game finish
-             printStatistics();//Print the all statistics
-         }
-         //in the case that all the red pieces eaten
-         else {
-             boolean allRedPawnsEaten = true;//flag for check if there are any player2 on the board
-             for (int i = 0; i < 11; i++) {
-                 for (int j = 0; j < 11; j++) {
-                     if (this.board[j][i] != null) {
-                         if (this.board[j][i].getOwner() == player2) {
-                             allRedPawnsEaten = false;
-                         }
-                     }
-                 }
-             }
-             if (allRedPawnsEaten) {
-                 winner = player1;//update the winner
-                 playerOneWin = true;//player1 win
-                 player1.addWins();//add win to player1
-                 gameFinish = true;//the game finish
-                 printStatistics();//Print the all statistics
-             }
-         }
+        if ((getPieceAtPosition(upEnemyE) != null && !getPieceAtPosition(upEnemyE).getOwner().isPlayerOne()) &&
+                (getPieceAtPosition(downEnemyE) != null && !getPieceAtPosition(downEnemyE).getOwner().isPlayerOne()) &&
+                (getPieceAtPosition(leftEnemyE) != null && !getPieceAtPosition(leftEnemyE).getOwner().isPlayerOne()) &&
+                (getPieceAtPosition(rightEnemyE) != null && !getPieceAtPosition(rightEnemyE).getOwner().isPlayerOne())) {
+            winner = player2;//update the winner
+            playerOneWin = false;//player2 win
+            player2.addWins();//add win to player2
+            gameFinish = true;//the game finish
+            printStatistics();//Print the all statistics
+        }
+        //in the case that all the red pieces eaten
+        else {
+            boolean allRedPawnsEaten = true;//flag for check if there are any player2 on the board
+            for (int i = 0; i < 11; i++) {
+                for (int j = 0; j < 11; j++) {
+                    if (this.board[j][i] != null) {
+                        if (this.board[j][i].getOwner() == player2) {
+                            allRedPawnsEaten = false;
+                        }
+                    }
+                }
+            }
+            if (allRedPawnsEaten) {
+                winner = player1;//update the winner
+                playerOneWin = true;//player1 win
+                player1.addWins();//add win to player1
+                gameFinish = true;//the game finish
+                printStatistics();//Print the all statistics
+            }
+        }
 
-     }
+    }
 
     @Override
     public boolean isSecondPlayerTurn() {
@@ -407,8 +410,8 @@ public class GameLogic implements PlayableLogic {
 
     /**
      * Initialized the pieces on the game board
-    */
-    public void startOfGame() {
+     */
+    private void startOfGame() {
         //king position
         board[5][5] = new King(player1, "K7", new Position(5, 5));
         //player 1 pawns position
@@ -510,9 +513,9 @@ public class GameLogic implements PlayableLogic {
      * The above 5 functions:"printKillData" "printLengthData" "printDestData" "printPositionData" "printStatistics"
      * use to help us print the date in the required manner
      */
-    public void printKillData(ConcretePiece[] pieces) {//prints the statistics associated with the kill
+    private void printKillData(ConcretePiece[] pieces) {//prints the statistics associated with the kill
         ArrayList<Pawn> list = new ArrayList<>();
-        for (int i = 1; i < pieces.length; i++) {//without the king in picese[0]
+        for (int i = 1; i < pieces.length; i++) {//without the king in pieces[0]
             if ((pieces[i]).getKills() > 0) {
                 list.add(((Pawn) pieces[i]));
             }
@@ -523,7 +526,7 @@ public class GameLogic implements PlayableLogic {
         }
     }
 
-    public void printLengthData(ConcretePiece[] pieces) {//prints the statistics associated with all the steps of piece
+    private void printLengthData(ConcretePiece[] pieces) {//prints the statistics associated with all the steps of piece
         ArrayList<ConcretePiece> listPlayer1 = new ArrayList<>();
         ArrayList<ConcretePiece> listPlayer2 = new ArrayList<>();
 
@@ -543,76 +546,69 @@ public class GameLogic implements PlayableLogic {
         listPlayer2.sort(new PieceLengthCompare());//piece in array sorted by length steps in attack set
 
         if (playerOneWin) {
-            for (int i = 0; i < listPlayer1.size(); i++) {
-                ConcretePiece curent = listPlayer1.get(i);
-                System.out.println(curent.getID() + ": " + Arrays.toString(curent.getStepsArr()));
+            for (ConcretePiece current : listPlayer1) {
+                System.out.println(current.getID() + ": " + Arrays.toString(current.getStepsArr()));
             }
-            for (int j = 0; j < listPlayer2.size(); j++) {
-                ConcretePiece curent = listPlayer2.get(j);
-                System.out.println(curent.getID() + ": " + Arrays.toString(curent.getStepsArr()));
+            for (ConcretePiece current : listPlayer2) {
+                System.out.println(current.getID() + ": " + Arrays.toString(current.getStepsArr()));
             }
         } else {
-            for (int j = 0; j < listPlayer2.size(); j++) {
-                ConcretePiece curent = listPlayer2.get(j);
-                System.out.println(curent.getID() + ": " + Arrays.toString(curent.getStepsArr()));
+            for (ConcretePiece current : listPlayer2) {
+                System.out.println(current.getID() + ": " + Arrays.toString(current.getStepsArr()));
             }
-            for (int i = 0; i < listPlayer1.size(); i++) {
-                ConcretePiece curent = listPlayer1.get(i);
-                System.out.println(curent.getID() + ": " + Arrays.toString(curent.getStepsArr()));
+            for (ConcretePiece current : listPlayer1) {
+                System.out.println(current.getID() + ": " + Arrays.toString(current.getStepsArr()));
             }
 
         }
     }
 
-    public void printDestData(ConcretePiece[] pieces) {//prints the statistics associated with the length of piece steps
-        for (int i = 0; i < pieces.length; i++) {
-            ConcretePiece current = pieces[i];
+    private void printDestData(ConcretePiece[] pieces) {//prints the statistics associated with the length of piece steps
+        for (ConcretePiece current : pieces) {
             for (int j = 0; j < current.steps.size() - 1; j++) {
                 Position pos = current.steps.get(j);
-                Position posCurernt = current.steps.get(j + 1);
+                Position poseCurrent = current.steps.get(j + 1);
 
-                if (pos.getX() == posCurernt.getX()) {
-                    int distance = Math.abs(pos.getY() - posCurernt.getY());
+                if (pos.getX() == poseCurrent.getX()) {
+                    int distance = Math.abs(pos.getY() - poseCurrent.getY());
                     current.addDest(distance);
-                } else if (pos.getY() == posCurernt.getY()) {
-                    int distance = Math.abs(pos.getX() - posCurernt.getX());
+                } else if (pos.getY() == poseCurrent.getY()) {
+                    int distance = Math.abs(pos.getX() - poseCurrent.getX());
                     current.addDest(distance);
                 }
             }
         }
         ArrayList<ConcretePiece> listPlayers = new ArrayList<>();
-        for (int i = 0; i < pieces.length; i++) {
-            if (pieces[i].getDistanceTraveled() > 0) {
-                listPlayers.add(pieces[i]);
+        for (ConcretePiece piece : pieces) {
+            if (piece.getDistanceTraveled() > 0) {
+                listPlayers.add(piece);
             }
         }
-        listPlayers.sort(new PieceSquarsCompare(winner));
-        for (int i = 0; i < listPlayers.size(); i++) {
-            ConcretePiece curent = listPlayers.get(i);
-            System.out.println(curent.getID() + ": " + curent.getDistanceTraveled() + " squares");
+        listPlayers.sort(new PieceSquaresCompare(winner));
+        for (ConcretePiece current : listPlayers) {
+            System.out.println(current.getID() + ": " + current.getDistanceTraveled() + " squares");
         }
 
     }
 
-    public void printPositionData(Position[][] pos) {//prints the statistics associated with the num steps on positions
+    private void printPositionData(Position[][] pos) {//prints the statistics associated with the num steps on positions
         ArrayList<Position> posComp = new ArrayList<>();
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
-                 if (pos[j][i] != null) {
-                posComp.add(pos[j][i]);
-                 }
+                if (pos[j][i] != null) {
+                    posComp.add(pos[j][i]);
+                }
             }
         }
         posComp.sort(new PiecePositionCompare());
-        for (int i = 0; i < posComp.size(); i++) {
-            if (posComp.get(i).getWhoWasIn() > 1) {
-                Position current = posComp.get(i);
-                System.out.println(current.toString() + current.getWhoWasIn() + " pieces");
+        for (Position position : posComp) {
+            if (position.getWhoWasIn() > 1) {
+                System.out.println(position.toString() + position.getWhoWasIn() + " pieces");
             }
         }
     }
 
-    public void printStatistics() {//function responsible for print all statistics
+    private void printStatistics() {//function responsible for print all statistics
         printLengthData(pieces);
         System.out.println("***************************************************************************");
         printKillData(pieces);
@@ -625,13 +621,10 @@ public class GameLogic implements PlayableLogic {
     }
 
 
-
-
-
     /**
      * This function initialized a board of position use to manage the position of each piece
      */
-    public void initBoardOfPos(ConcretePiece[][] board) {//initialization matrix of position
+    private void initBoardOfPos(ConcretePiece[][] board) {//initialization matrix of position
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
                 boardOfPosition[j][i] = new Position(i, j);

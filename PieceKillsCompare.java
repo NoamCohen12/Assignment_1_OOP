@@ -6,7 +6,7 @@ import java.util.Comparator;
  * in ascending order, if the number is equal, sort according to the winning team first
  */
 class PieceKillsCompare implements Comparator<Pawn> {
-    private Player winner;
+    private final Player winner;
     public PieceKillsCompare(Player winner) {
         this.winner = winner;
     }
