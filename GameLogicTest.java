@@ -16,7 +16,7 @@ class GameLogicTest {
         static Stream<ComparisonData> comparisonData() {
             File inputDirectory = new File("src/test/resources/inputs");
             File outputDirectory = new File("src/test/resources/outputs");
-
+///////////
             if (!inputDirectory.exists() || !outputDirectory.exists()) {
                 fail("Input or output directory not found");
             }
