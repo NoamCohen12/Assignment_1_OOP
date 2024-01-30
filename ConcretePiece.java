@@ -27,7 +27,7 @@ public abstract class ConcretePiece implements Piece {
         numOfSteps = 0;
         distanceTraveled = 0;
     }
-
+//getters
     public abstract int getKills();
 
     @Override
@@ -35,27 +35,40 @@ public abstract class ConcretePiece implements Piece {
         return owner;
     }
 
-    public void addSteps(Position xy) {//updates the variable "steps"
+    /**
+     * updates the variable "steps"
+     * @param xy
+     */
+    public void addSteps(Position xy) {
         this.steps.add(xy);
     }
 
+    /**
+     * updates the variable "distanceTraveled"
+     * @param dest
+     */
     public void addDest(int dest) {
         distanceTraveled += dest;
     }
 public int getDistanceTraveled(){
         return this.distanceTraveled;
 }
-    String getID() {
+   public String getID() {
         return this.id;
     }
 
-    String[] getStepsArr() {
+    /**
+     *this function converts an array of positions to an array of String of positions for print at game finished
+     * @return String[]
+     */
+    public String[] getStepsArr() {
         String[] stepsString = new String[steps.size()];
         for (int i = 0; i < steps.size(); i++) {
             stepsString[i] = steps.get(i).toString();
         }
         return stepsString;
     }
+
 
     public int getNumOfSteps() {
         return steps.size();

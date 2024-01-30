@@ -1,8 +1,8 @@
 public class ConcretePlayer implements Player {
     private int wins;
-    private boolean isPlayerOne;
+    private  boolean isPlayerOne;
 
-    public ConcretePlayer(boolean isPlayerOne) {//TODO add the steps
+    public ConcretePlayer(boolean isPlayerOne) {
         this.wins = 0;
         this.isPlayerOne = isPlayerOne;
 
