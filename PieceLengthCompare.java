@@ -1,5 +1,10 @@
 import java.util.Comparator;
-
+/**
+ * After one side wins, this comparator help to print for each piece on the board,
+ * its move history sorted in ascending order According to the number of steps the same piece.
+ * First print the winning side arrived the losing side,
+ * within the steps the pieces must be sorted according to their number in ascending order
+ */
 class PieceLengthCompare implements Comparator<ConcretePiece> {
 
     @Override

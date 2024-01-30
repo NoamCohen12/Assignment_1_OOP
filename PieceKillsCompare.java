@@ -1,5 +1,10 @@
 import java.util.Comparator;
 
+/**
+ * This comparator help to print all the pieces sorted in descending order
+ * according to the amount eaten, if the amount is equal, sort according to the ID number
+ * in ascending order, if the number is equal, sort according to the winning team first
+ */
 class PieceKillsCompare implements Comparator<Pawn> {
     private Player winner;
     public PieceKillsCompare(Player winner) {

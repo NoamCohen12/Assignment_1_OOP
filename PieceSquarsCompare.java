@@ -1,5 +1,12 @@
 import java.util.Comparator;
 
+/**
+ * Print all pieces sorted in descending order by cumulative distance
+ * traveled during the game, if the distance is equal
+ * Sort by the number of the piece in ascending order,
+ * if the number is equal, sort by the winning team first.
+ * Show only pieces that have taken at least one step
+ */
 class PieceSquarsCompare implements Comparator<ConcretePiece> {
 
     private Player winner;
