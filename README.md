@@ -15,6 +15,8 @@ The implementation includes:
 All logic is implemented exclusively in the classes written by the student.  
 The provided files (`Main.java`, `GUI_for_chess_like_games.java`, `Piece.java`, `Player.java`, `PlayableLogic.java`) were **not modified**, as required.
 
+---
+
 ## 2. Game Rules (Summary)
 - **Board size**: 11×11  
 - **Defenders (light/blue)**: 13 pawns + King  
@@ -22,55 +24,110 @@ The provided files (`Main.java`, `GUI_for_chess_like_games.java`, `Piece.java`, 
 - **Goal for defenders**: Move the King to a corner square  
 - **Goal for attackers**: Capture the King by surrounding him  
 - **Movement**: orthogonal only, no diagonal movement, no jumping over pieces  
-- **Capturing**: sandwich rule, corners can act as capturing partners  
+- **Capturing**: sandwich rule, corners act as capturing partners  
 - **Victory**: King escapes or King is captured  
 
+---
+
 ## 3. OOP Architecture (Part A)
+
 ### Class Hierarchy
-Piece (interface) → ConcretePiece (abstract) → Pawn / King
+```
+Piece (interface)
+    ↑
+ConcretePiece (abstract)
+    ↑
+ ┌───────────────┬───────────────┐
+ |               |               |
+Pawn            King        (other pieces)
+```
 
 ### Logic Components
-PlayableLogic (interface) → GameLogic
+```
+PlayableLogic (interface)
+        ↑
+    GameLogic
+```
 
 ### Additional Structures
-Position, ConcretePlayer, Comparators:
-- PieceLengthCompare  
-- PieceKillsCompare  
-- PiecePositionCompare  
-- PieceSquaresCompare  
+- Position  
+- ConcretePlayer  
+- Comparators:  
+  - PieceLengthCompare  
+  - PieceKillsCompare  
+  - PiecePositionCompare  
+  - PieceSquaresCompare  
+
+---
 
 ## 4. Implemented Classes
-Descriptions of ConcretePiece, Pawn, King, Position, ConcretePlayer, and GameLogic follow the assignment requirements.
+All classes follow exactly the assignment specifications.
+
+---
 
 ## 5. GUI Preview
-(Insert image in repository at: images/board_preview.png)
+
+Below is a preview of the graphical interface:
+
+<div align="center">
+  <img src="images/board_preview.png" width="420"/>
+</div>
+
+---
 
 ## 6. Statistical Output (Part B – Comparators)
-### 1. Movement History  
-### 2. Kill Count  
-### 3. Distance Walked  
-### 4. Square Usage  
 
-(All sorted according to assignment rules.)
+Below is a real example of the output generated at the end of a game:
+
+<div align="center">
+  <img src="images/statistics_preview.png" width="420"/>
+</div>
+
+This output includes:
+- Sorted movement history  
+- Kill count summary  
+- Proper formatting with 75 asterisks  
+- Follows all sorting requirements from the assignment  
+
+---
 
 ## 7. Undo Feature (Bonus)
-Implemented using a stack of game state snapshots.
+The `undoLastMove()` function restores:
+- Board state  
+- Piece positions  
+- Move history  
+- Kill counters  
+- Turn order  
+
+Implemented using a **stack of deep-copied game states**.
+
+---
 
 ## 8. How to Run
-Requirements: Java 17+.  
-Compile and run:
+
+### Requirements
+- Java 17+
+- No external libraries
+
+### Run
 ```
 javac Main.java
 java Main
 ```
 
+---
+
 ## 9. Notes
-- All required interfaces were respected.
-- No provided files were modified.
-- All sorting uses Comparator implementations.
+- No provided skeleton files were modified.  
+- All logic implemented in student-created classes.  
+- All comparators fully comply with required sorting logic.
+
+---
 
 ## 10. Author
-Developer: **Noam**
+Developer: **Noam Cohen**
+
+---
 
 ## 11. Reference
-Game rules and assignment instructions based on the official course document.
+Official course assignment instructions.
