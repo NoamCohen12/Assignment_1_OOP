@@ -124,8 +124,11 @@ java Main
 
 ---
 
-## 10. Author
-Developer: **Noam Cohen**
+## 10. Authors
+Developed by:  
+**Noam Cohen**  
+**Bar Yechezkel**
+
 
 ---
 
